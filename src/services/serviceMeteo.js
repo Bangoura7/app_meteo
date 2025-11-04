@@ -1,3 +1,5 @@
+import { formaterMeteoActuelle, formaterPrevisions } from '../utils/formateurDonnees';
+
 const CLE_API = 'cdecf0112544cb92e07568739cdf9aa0';
 const URL_BASE = 'https://api.openweathermap.org/data/2.5';
 
@@ -16,16 +18,12 @@ export async function obtenirMeteoActuelle(ville) {
     }
     
     const data = await response.json();
-    console.log('Météo actuelle pour', ville, ':', data);
+    console.log('Météo actuelle pour', ville, '(données brutes):', data);
     
-    return {
-      ville: data.name,
-      temperature: data.main.temp,
-      description: data.weather[0].description,
-      humidite: data.main.humidity,
-      vitesseVent: data.wind.speed,
-      icone: data.weather[0].icon
-    };
+    const donneesFormatees = formaterMeteoActuelle(data);
+    console.log('Météo actuelle pour', ville, '(données formatées):', donneesFormatees);
+    
+    return donneesFormatees;
   } catch (error) {
     console.error('Erreur lors de la récupération de la météo:', error);
     return null;
@@ -49,16 +47,12 @@ export async function obtenirMeteoParCoordonnees(latitude, longitude) {
     }
     
     const data = await response.json();
-    console.log('Météo pour les coordonnées:', data);
+    console.log('Météo pour les coordonnées (données brutes):', data);
     
-    return {
-      ville: data.name,
-      temperature: data.main.temp,
-      description: data.weather[0].description,
-      humidite: data.main.humidity,
-      vitesseVent: data.wind.speed,
-      icone: data.weather[0].icon
-    };
+    const donneesFormatees = formaterMeteoActuelle(data);
+    console.log('Météo pour les coordonnées (données formatées):', donneesFormatees);
+    
+    return donneesFormatees;
   } catch (error) {
     console.error('Erreur lors de la récupération de la météo par coordonnées:', error);
     return null;
@@ -81,16 +75,12 @@ export async function obtenirPrevisions(ville, jours = 5) {
     }
     
     const data = await response.json();
-    console.log('Prévisions pour', ville, ':', data);
+    console.log('Prévisions pour', ville, '(données brutes):', data);
     
-    return data.list.map(item => ({
-      date: new Date(item.dt * 1000),
-      temperature: item.main.temp,
-      description: item.weather[0].description,
-      humidite: item.main.humidity,
-      vitesseVent: item.wind.speed,
-      icone: item.weather[0].icon
-    }));
+    const previsionsFormatees = formaterPrevisions(data);
+    console.log('Prévisions pour', ville, '(données formatées):', previsionsFormatees);
+    
+    return previsionsFormatees;
   } catch (error) {
     console.error('Erreur lors de la récupération des prévisions:', error);
     return null;
