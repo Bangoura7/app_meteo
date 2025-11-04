@@ -1,6 +1,16 @@
 import './styles/main.css';
 import { obtenirMeteoActuelle } from './services/serviceMeteo';
 
+// Fonction pour afficher le loader
+function afficherLoader() {
+  document.getElementById('resultat').innerHTML = `
+    <div class="loader-container">
+      <div class="spinner"></div>
+      <p class="loader-text">Récupération des données météo...</p>
+    </div>
+  `;
+}
+
 // Fonction pour afficher les données météo
 function afficherMeteo(donnees) {
   if (!donnees) {
@@ -99,8 +109,8 @@ formulaire.addEventListener('submit', async (e) => {
   
   if (!ville) return;
   
-  // Afficher un loader
-  document.getElementById('resultat').innerHTML = '<div class="loader">Chargement...</div>';
+  // Afficher le loader
+  afficherLoader();
   
   // Récupérer et afficher les données
   const donnees = await obtenirMeteoActuelle(ville);
